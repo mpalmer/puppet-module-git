@@ -1,0 +1,18 @@
+Manage git packages and repositories.
+
+If you want git installed:
+
+    include git::packages
+
+If you'd like to checkout a repo:
+
+    git::checkout { "<whatever>":
+        url    => "<repo path/url>",
+        target => "<where the repo should land>",
+        ref    => "<a tree-isn to checkout>",
+        user   => "<user to own the checkout>",
+        group  => "<group to own the checkout>",
+        update => <true/false to keep the checkout up-to-date>
+    }
+
+Coming soon: `git::export`.
