@@ -64,7 +64,7 @@ define git::checkout(
 		"git/checkout/clone:${name}":
 			require => Noop["git/checkout/preclone:${name}"];
 		"git/checkout/update:${name}":
-			require => Noop["git/checkout/cloned/${name}"];
+			require => Noop["git/checkout/clone:${name}"];
 	}
 
 	include git::packages
