@@ -71,9 +71,13 @@ define git::checkout(
 
 	Exec { path => "/usr/local/bin:/usr/bin:/bin" }
 
+	$sq_url    = shellquote($url)
+	$sq_target = shellquote($target)
+	$sq_ref    = shellquote($ref)
+
 	exec {
 		"Clone ${url} to ${target}":
-			command     => "git clone ${url} ${target}",
+			command     => "git clone ${sq_url} ${sq_target}",
 			creates     => "${target}/.git",
 			user        => $user,
 			group       => $group,
@@ -82,7 +86,7 @@ define git::checkout(
 			                 Noop["git/checkout/preclone:${name}"]
 			               ];
 		"Checkout ${url}:${ref} at ${target}":
-			command     => "git checkout ${ref}",
+			command     => "git checkout ${sq_ref}",
 			cwd         => $target,
 			user        => $user,
 			group       => $group,
@@ -108,7 +112,7 @@ define git::checkout(
 				cwd         => $target,
 				user        => $user,
 				group       => $group,
-				onlyif      => "test \$(git log HEAD..origin/${ref} | wc -l) = 0",
+				onlyif      => "test \$(git log HEAD..origin/${sq_ref} | wc -l) = 0",
 				require     => Exec["Fetch updates to ${url}:${ref} for ${target}"],
 				notify      => Exec["Checkout ${url}:${ref} at ${target}"];
 		}
