@@ -98,23 +98,12 @@ define git::checkout(
 	if $update {
 		exec {
 			"Fetch updates to ${url}:${ref} for ${target}":
-				command     => "git fetch origin",
+				command     => "git merge --ff-only origin/${sq_ref}",
 				cwd         => $target,
 				user        => $user,
 				group       => $group,
-				require     => Noop["git/checkout/clone:${name}"];
-			# This is a weird resource; the real work is done in the `onlyif`,
-			# the command is only there because we need *something* to do if
-			# the onlyif fires, apart from notifying the checkout resource
-			# that it needs to Do Things
-			"Check to see if we need to update ${url}:${ref} at ${target}":
-				command     => "/bin/true",
-				cwd         => $target,
-				user        => $user,
-				group       => $group,
-				onlyif      => "test \$(git log HEAD..origin/${sq_ref} | wc -l) = 0",
-				require     => Exec["Fetch updates to ${url}:${ref} for ${target}"],
-				notify      => Exec["Checkout ${url}:${ref} at ${target}"];
+				unless      => "git fetch origin && test \$(git log HEAD..origin/${sq_ref} | wc -l) = 0",
+				require     => Noop["git/checkout/clone:${name}"],
 		}
 	}
 }
