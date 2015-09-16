@@ -5,7 +5,7 @@ class git::packages {
 		RedHat,CentOS: {
 			$git_packages = "git"
 		}
-		Debian: {
+		Debian,Ubuntu: {
 			# They finally got their shit together for squeeze and got a good name
 			case $lsbdistcodename {
 				sarge,etch,lenny: {
@@ -15,6 +15,9 @@ class git::packages {
 					$git_packages = [ "git", "git-doc" ]
 				}
 			}
+		}
+		default: {
+			fail "I don't know how to install git packages for OS ${operatingsystem}"
 		}
 	}
 
