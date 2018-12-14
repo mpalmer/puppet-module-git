@@ -2,10 +2,10 @@ class git::packages {
 	noop { "git/packages": }
 
 	case $operatingsystem {
-		RedHat,CentOS: {
+		"RedHat", "CentOS": {
 			$git_packages = "git"
 		}
-		Debian,Ubuntu: {
+		"Debian", "Ubuntu": {
 			# They finally got their shit together for squeeze and got a good name
 			case $lsbdistcodename {
 				sarge,etch,lenny: {
